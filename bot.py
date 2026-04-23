@@ -26,13 +26,16 @@ def run_git_command(command):
         print(f"Hata: {result.stderr}")
     return result.returncode
 
-def append_to_file():
+def append_to_file(mesaj):
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(FILE_NAME, "a", encoding="utf-8") as f:
-        f.write(f"Update: {timestamp}\n")
+        # Tarihle birlikte seçilen profesyonel mesajı da dosyaya yazar
+        f.write(f"{timestamp} - LOG: {mesaj}\n")
 
 def git_push():
     commit_message = random.choice(RANDOM_TEXTS)
+    
+    append_to_file(commit_message) 
     
     run_git_command("git add .")
     run_git_command(f'git commit -m "{commit_message}"')
