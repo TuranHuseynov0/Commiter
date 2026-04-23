@@ -3,9 +3,11 @@ import subprocess
 import random
 from datetime import datetime
 
+# --- AYARLAR ---
 FILE_NAME = "data.txt"
 BRANCH = "main"
 
+# Profesyonel Commit Mesajları
 RANDOM_TEXTS = [
     "fix: resolve identified bug in application logic",
     "feat: implement foundational structures for upcoming release",
@@ -21,39 +23,57 @@ RANDOM_TEXTS = [
 ]
 
 def run_git_command(command):
+    """Git komutlarını çalıştırır."""
     result = subprocess.run(command, shell=True, capture_output=True, text=True)
     if result.returncode != 0:
-        print(f"Hata: {result.stderr}")
+        print(f"Hata: {result.stderr.strip()}")
     return result.returncode
 
 def append_to_file(mesaj):
+    """Hem tarihi hem de profesyonel mesajı dosyanın içine yazar."""
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with open(FILE_NAME, "a", encoding="utf-8") as f:
-        # Tarihle birlikte seçilen profesyonel mesajı da dosyaya yazar
-        f.write(f"{timestamp} - LOG: {mesaj}\n")
+        # Artık dosyanın içinde sadece tarih değil, mesaj da olacak
+        f.write(f"[{timestamp}] - {mesaj}\n")
 
 def git_push():
+    """Git işlemlerini yapar."""
+    # Listeden rastgele bir mesaj seç
     commit_message = random.choice(RANDOM_TEXTS)
     
-    append_to_file(commit_message) 
+    # 1. Önce dosyayı güncelle (içine mesajı yaz)
+    append_to_file(commit_message)
     
+    # 2. Git komutlarını çalıştır
     run_git_command("git add .")
     run_git_command(f'git commit -m "{commit_message}"')
     run_git_command(f"git push origin {BRANCH}")
     
-    print(f"[{datetime.now().strftime('%H:%M:%S')}] Başarıyla pushlandı: {commit_message}")
+    print(f"✅ Başarılı: {commit_message}")
 
 def is_work_hours():
+    """Botun sadece sabah 09:00 - 23:00 arası çalışmasını sağlar."""
     now = datetime.now()
     return 9 <= now.hour <= 23
 
 # --- ANA DÖNGÜ ---
-print("Profesyonel Auto-Commit Botu başlatıldı...")
+print("🚀 Gelişmiş Profesyonel Bot Başlatıldı!")
+print("💡 Not: Mesajlar artık hem commit başlığında hem de data.txt içinde görünecek.")
 
 while True:
     if is_work_hours():
+        # Rastgelelik: %80 ihtimalle commit at (bazı saatleri boş geçmek daha doğal)
         if random.random() < 0.8:
-            append_to_file()
             git_push()
         else:
-            print("🕒 Bu döngü şans eseri atlandı (doğal görünüm için).")
+            print("🕒 Bu döngü 'insansı' görünüm için pas geçildi.")
+
+        # BEKLEME SÜRESİ (ÖNEMLİ): 
+        # Test için 10-30 saniye yapmak istersen: random.randint(10, 30)
+        # Gerçekçi kullanım için: 1 saat (3600 sn) ile 3 saat (10800 sn) arası
+        wait_time = random.randint(1800, 7200) 
+        print(f"💤 Sonraki işlem için {wait_time // 60} dakika beklenecek...")
+        time.sleep(wait_time)
+    else:
+        print("🌙 Gece modu: Bot sabah 09:00'a kadar uyuyor...")
+        time.sleep(3600)
