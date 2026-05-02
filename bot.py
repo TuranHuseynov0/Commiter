@@ -1,5 +1,6 @@
 import subprocess
 import random
+import time  # Bekleme süresi için eklendi
 from datetime import datetime
 
 FILE_NAME = "data.txt"
@@ -41,14 +42,21 @@ def git_push():
 
 def is_work_hours():
     now = datetime.now()
+    # 08:00 ile 23:59 arası çalışma saatleri
     return 8 <= now.hour <= 23
 
 if __name__ == "__main__":
-    print("Professional Auto-Commit Bot started...")
-    if is_work_hours():
-        if random.random() < 0.85:
-            git_push()
+    print("Professional Auto-Commit Bot started (Interval: 30 minutes)...")
+    
+    while True:  # Sonsuz döngü başlatıldı
+        if is_work_hours():
+            # Rastgelelik oranını biraz artırdık veya tamamen kaldırabilirsin
+            if random.random() < 0.90: 
+                git_push()
+            else:
+                print(f"[{datetime.now().strftime('%H:%M:%S')}] Action skipped for human-like behavior.")
         else:
-            print("Action skipped for human-like behavior.")
-    else:
-        print("Night mode: Skipped. Out of work hours.")
+            print(f"[{datetime.now().strftime('%H:%M:%S')}] Night mode: Skipped.")
+
+        # 30 dakika bekler (30 dakika * 60 saniye = 1800 saniye)
+        time.sleep(1800)
