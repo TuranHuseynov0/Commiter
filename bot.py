@@ -1,4 +1,3 @@
-import time
 import subprocess
 import random
 from datetime import datetime
@@ -44,18 +43,12 @@ def is_work_hours():
     now = datetime.now()
     return 8 <= now.hour <= 23
 
-print("Professional Auto-Commit Bot started...")
-
-while True:
+if __name__ == "__main__":
+    print("Professional Auto-Commit Bot started...")
     if is_work_hours():
         if random.random() < 0.85:
             git_push()
         else:
             print("Action skipped for human-like behavior.")
-
-        wait_time = random.randint(1800, 10800)
-        print(f"Next action in {wait_time // 60} minutes.")
-        time.sleep(wait_time)
     else:
-        print("Night mode: Sleeping until 08:00...")
-        time.sleep(3600)
+        print("Night mode: Skipped. Out of work hours.")

@@ -1,0 +1,33 @@
+name: Auto Committer Bot
+
+on:
+  schedule:
+    # Bu cron ifadəsi skripti HƏR SAAT işə salır.
+    # Siz vaxtı istədiyiniz kimi dəyişə bilərsiniz.
+    - cron: '0 * * * *' 
+  workflow_dispatch: # Bu sizə Actions panelindən manual (əllə) başlatmağa imkan verir
+
+permissions:
+  contents: write # Botun repozitoriyaya commit edə bilməsi üçün icazə
+
+jobs:
+  auto-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Auto-Commit Script
+        run: python bot.py
