@@ -1,6 +1,5 @@
 import subprocess
 import random
-import time  # Bekleme süresi için eklendi
 from datetime import datetime
 
 FILE_NAME = "data.txt"
@@ -38,25 +37,15 @@ def git_push():
             if run_git_command(f"git push origin {BRANCH}") == 0:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Success: {message}")
                 return True
+    print(f"[{datetime.now().strftime('%H:%M:%S')}] Error: Git commands failed.")
     return False
 
-def is_work_hours():
-    now = datetime.now()
-    # 08:00 ile 23:59 arası çalışma saatleri
-    return 8 <= now.hour <= 23
-
 if __name__ == "__main__":
-    print("Professional Auto-Commit Bot started (Interval: 30 minutes)...")
+    print("Auto-Commit Bot executed by GitHub Actions...")
     
-    while True:  # Sonsuz döngü başlatıldı
-        if is_work_hours():
-            # Rastgelelik oranını biraz artırdık veya tamamen kaldırabilirsin
-            if random.random() < 0.90: 
-                git_push()
-            else:
-                print(f"[{datetime.now().strftime('%H:%M:%S')}] Action skipped for human-like behavior.")
-        else:
-            print(f"[{datetime.now().strftime('%H:%M:%S')}] Night mode: Skipped.")
-
-        # 30 dakika bekler (30 dakika * 60 saniye = 1800 saniye)
-        time.sleep(1800)
+    # İnsan davranışını təqlid etmək üçün 90% şansla commit atır.
+    # (Əgər hər işə düşəndə mütləq commit atmasını istəyirsinizsə, bu if-else-i silib sadəcə git_push() yaza bilərsiniz)
+    if random.random() < 0.90: 
+        git_push()
+    else:
+        print(f"[{datetime.now().strftime('%H:%M:%S')}] Action skipped for human-like behavior.")
