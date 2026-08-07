@@ -20,7 +20,7 @@ RANDOM_TEXTS = [
 ]
 
 def run_git_command(command):
-    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    result = subprocess.run(command, capture_output=True, text=True)
     return result.returncode
 
 def append_to_file(message):
@@ -32,9 +32,9 @@ def git_push():
     message = random.choice(RANDOM_TEXTS)
     append_to_file(message)
     
-    if run_git_command("git add .") == 0:
-        if run_git_command(f'git commit -m "{message}"') == 0:
-            if run_git_command(f"git push origin {BRANCH}") == 0:
+    if run_git_command(["git", "add", "--", FILE_NAME]) == 0:
+        if run_git_command(["git", "commit", "-m", message]) == 0:
+            if run_git_command(["git", "push", "origin", BRANCH]) == 0:
                 print(f"[{datetime.now().strftime('%H:%M:%S')}] Success: {message}")
                 return True
     print(f"[{datetime.now().strftime('%H:%M:%S')}] Error: Git commands failed.")

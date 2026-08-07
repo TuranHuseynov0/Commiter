@@ -15,7 +15,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
         with:
-          token: ${{ secrets.MY_GIT_TOKEN }}
           persist-credentials: true
 
       - name: Set up Python
@@ -29,6 +28,4 @@ jobs:
           git config --global user.email "turanhuseynov006@gmail.com"
 
       - name: Run Auto-Commit Script
-        env:
-          MY_GIT_TOKEN: ${{ secrets.MY_GIT_TOKEN }}
         run: python -u bot.py
